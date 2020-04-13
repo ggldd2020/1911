@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.st.dao.TestDao">
+<insert id="addBM" parameterType="map">
+insert into bumen values (#{uuid},#{bmname})
+</insert>
+
+
+
+<resultMap type="com.st.bean.TreeBean" id="treeBean">
+<result column="parent_id" property="id" />
+<result column="parent_name" property="title" />
+<collection property="children" ofType="com.st.bean.TreeBean">
+<result column="perm_id" property="id" />
+<result column="perm_name" property="title" /></collection>
+</resultMap>
+
+<select id="treeJson" resultMap="treeBean">
+select a.perm_id as parent_id,a.perm_name as parent_name,b.perm_id,b.perm_name from permission a left join permission b
+on a.perm_id=b.parent_id where a.parent_id is null
+</select>
+<!-- 查询所有用户 -->
+<select id="selectalluser" parameterType="java.util.Map" resultType="com.st.bean.User">
+select * from user
+</select>
+
+<!-- 新增用户 -->
+<insert id="adduser" parameterType="com.st.bean.User">
+insert into user (username,usersex,userage,usertel,userhometown,role_name) values
+(#{username},#{usersex},#{userage},#{usertel},#{userhometown},#{role_name})
+</insert>
+<!-- 查询符合查询条件用户 -->
+<select id="selectuser" parameterType="java.util.Map" resultType="com.st.bean.User">
+select * from user where userid like '%${param}%' or username like '%${param}%' or userage like '%${param}%'
+ or usersex like '%${param}%' or usertel like '%${param}%' or userhometown like '%${param}%' or role_name like '%${param}%'
+</select>
+<!-- 删除选中用户 -->
+<delete id="deluser" parameterType="java.util.Map">
+delete from user where userid=#{userid}
+</delete>
+
+
+<update id="updateuser" parameterType="java.util.Map">
+update user set username=#{username},userage=#{userage},usersex=#{usersex},usertel=#{usertel},userhometown=#{userhometown},role_name=#{role_name}
+where userid=#{userid} 
+</update>
+
+<select id="getuser" parameterType="string" resultMap="user_map">
+select * from user where username = #{username}
+</select>
+<resultMap id="user_map" type="com.st.bean.User">
+<result column="userid" property="userid"></result>
+<result column="username" property="username"></result>
+<result column="userpass" property="userpass"></result>
+<collection property="roles" select="user_role_list" column="userid">
+
+</collection>
+</resultMap>
+<select id="user_role_list" resultMap="role_map">
+select * from user_role a left join role b on a.role_id=b.role_id  where a.userid=#{userid}
+</select>
+
+<resultMap id="role_map" type="com.st.bean.Role">
+<result column="role_id" property="role_id"></result>
+<result column="role_name" property="role_name"></result>
+<collection property="permissions" select="role_permission_list" column="role_id">
+
+</collection>
+</resultMap>
+<select id="role_permisssion_list" resultType="com.st.bean.Permission">
+select b.* from role_permisssion a left join permission b on a.perm_id = b.perm_id
+where a.role_id =#{role_id}
+</select>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.st.dao.VisitDao">
+
+	<select id="selectallvisit" parameterType="java.util.Map"
+		resultType="com.st.bean.Visit">
+		select * from visit
+	</select>
+	<insert id="addvisit" parameterType="com.st.bean.Visit">
+		insert into visit (visitname,visittel) values
+		(#{visitname},#{visittel})
+	</insert>
+	<select id="selectvisit" parameterType="java.util.Map"
+		resultType="com.st.bean.Visit">
+		select * from visit where visitid like '%${param}%' or visitname like
+		'%${param}%' or visittel like '%${param}%'
+	</select>
+	<delete id="delvisit" parameterType="java.util.Map">
+		delete from visit where visitid=#{visitid}
+	</delete>
+	<update id="updatevisit" parameterType="java.util.Map">
+		update visit set visitname=#{visitname},visittel=#{visittel}
+		where visitid=#{visitid}
+	</update>
+</mapper>

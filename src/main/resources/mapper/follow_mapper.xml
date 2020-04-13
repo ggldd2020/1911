@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.st.dao.FollowDao">
+
+<select id="selectallfollow" parameterType="java.util.Map" resultType="com.st.bean.Follow">
+select * from follow
+</select>
+<insert id="addfollow" parameterType="com.st.bean.Follow">
+insert into follow (customername,customerorder,customercash,adminname,adminposition,followmessage,followps) values
+(#{customername},#{customerorder},#{customercash},#{adminname},#{adminposition},#{followmessage},#{followps})
+</insert>
+<select id="selectfollow" parameterType="java.util.Map" resultType="com.st.bean.Follow">
+select * from follow where followid like '%${param}%' or customername like '%${param}%' or customerorder like '%${param}%'
+ or customercash like '%${param}%' or adminname like '%${param}%' or adminposition like '%${param}%' or followmessage like '%${param}%' or followps like '%${param}%'
+</select>
+<delete id="delfollow" parameterType="java.util.Map">
+delete from follow where followid=#{followid}
+</delete>
+<update id="updatefollow" parameterType="java.util.Map">
+update follow set customername=#{customername},customerorder=#{customerorder},customercash=#{customercash},adminname=#{adminname},adminposition=#{adminposition},followmessage=#{followmessage},followps=#{followps}
+where followid=#{followid} 
+
+</update>
+
+</mapper>
